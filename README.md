@@ -1,5 +1,5 @@
 # blog
-blog
+
 <img width="892" height="466" alt="image" src="https://github.com/user-attachments/assets/38a78828-8d47-4b74-b4e0-7ff65d2c2b7e" />
 
 Создайте приложения для блога:
