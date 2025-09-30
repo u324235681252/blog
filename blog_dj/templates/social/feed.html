@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Лента - Social Network{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-house-heart me-2"></i>Лента</h2>
+            <a href="{% url 'create_post' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Создать пост
+            </a>
+        </div>
+        
+        {% if posts %}
+            {% for post in posts %}
+                {% include 'social/post_card.html' %}
+            {% endfor %}
+            
+            {% if posts.has_other_pages %}
+                <nav aria-label="Навигация по страницам">
+                    <ul class="pagination justify-content-center">
+                        {% if posts.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">Первая</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.previous_page_number }}">Назад</a>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">{{ posts.number }} из {{ posts.paginator.num_pages }}</span>
+                        </li>
+                        
+                        {% if posts.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.next_page_number }}">Вперед</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Последняя</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-chat-text display-1 text-muted"></i>
+                <h3 class="mt-3">Лента пуста</h3>
+                <p class="text-muted">Подпишитесь на пользователей или создайте свой первый пост!</p>
+                <a href="{% url 'public_posts' %}" class="btn btn-outline-primary me-2">Посмотреть публичные посты</a>
+                <a href="{% url 'create_post' %}" class="btn btn-primary">Создать пост</a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-tags me-2"></i>Популярные теги</h5>
+            </div>
+            <div class="card-body">
+                {% if popular_tags %}
+                    {% for tag in popular_tags %}
+                        <a href="{% url 'posts_by_tag' tag.name %}" class="badge rounded-pill text-decoration-none me-2 mb-2" 
+                           style="background-color: {{ tag.color }}">
+                            #{{ tag.name }}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted mb-0">Теги появятся после создания постов</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>О платформе</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">
+                    Социальная сеть для обмена идеями и общения. Создавайте посты, 
+                    подписывайтесь на интересных людей и участвуйте в дискуссиях.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

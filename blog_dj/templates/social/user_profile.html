@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile_user.get_full_name|default:profile_user.username }} - Social Network{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <img src="{{ profile_user.profile.get_avatar }}" alt="{{ profile_user.username }}" 
+                     class="rounded-circle mb-3" width="120" height="120">
+                <h4>{{ profile_user.get_full_name|default:profile_user.username }}</h4>
+                <p class="text-muted">@{{ profile_user.username }}</p>
+                
+                {% if profile_user.profile.bio %}
+                    <p class="mb-3">{{ profile_user.profile.bio }}</p>
+                {% endif %}
+                
+                <div class="row text-center mb-3">
+                    <div class="col">
+                        <strong>{{ posts.count }}</strong><br>
+                        <small class="text-muted">Постов</small>
+                    </div>
+                    <div class="col">
+                        <strong>{{ followers_count }}</strong><br>
+                        <small class="text-muted">Подписчиков</small>
+                    </div>
+                    <div class="col">
+                        <strong>{{ following_count }}</strong><br>
+                        <small class="text-muted">Подписок</small>
+                    </div>
+                </div>
+                
+                {% if user.is_authenticated and user != profile_user %}
+                    {% if is_following %}
+                        <a href="{% url 'unfollow_user' profile_user.username %}" class="btn btn-outline-primary">
+                            <i class="bi bi-person-dash me-2"></i>Отписаться
+                        </a>
+                    {% else %}
+                        <a href="{% url 'follow_user' profile_user.username %}" class="btn btn-primary">
+                            <i class="bi bi-person-plus me-2"></i>Подписаться
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <h3>Посты пользователя {{ profile_user.get_full_name|default:profile_user.username }}</h3>
+        
+        {% if posts %}
+            {% for post in posts %}
+                {% include 'social/post_card.html' %}
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-file-text display-1 text-muted"></i>
+                <h4 class="mt-3">Пока нет публичных постов</h4>
+                <p class="text-muted">Этот пользователь еще не создал публичных постов.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

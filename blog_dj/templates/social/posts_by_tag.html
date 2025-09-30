@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Посты по тегу #{{ tag.name }} - Social Network{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex align-items-center mb-4">
+            <span class="badge rounded-pill me-3" style="background-color: {{ tag.color }}; font-size: 1.2rem;">
+                #{{ tag.name }}
+            </span>
+            <h2 class="mb-0">Посты по тегу</h2>
+        </div>
+        
+        {% if posts %}
+            {% for post in posts %}
+                {% include 'social/post_card.html' %}
+            {% endfor %}
+            
+            {% if posts.has_other_pages %}
+                <nav aria-label="Навигация по страницам">
+                    <ul class="pagination justify-content-center">
+                        {% if posts.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">Первая</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.previous_page_number }}">Назад</a>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">{{ posts.number }} из {{ posts.paginator.num_pages }}</span>
+                        </li>
+                        
+                        {% if posts.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.next_page_number }}">Вперед</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Последняя</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-tag display-1 text-muted"></i>
+                <h3 class="mt-3">Постов с этим тегом пока нет</h3>
+                <p class="text-muted">Станьте первым, кто создаст пост с тегом #{{ tag.name }}!</p>
+                <a href="{% url 'create_post' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Создать пост
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
